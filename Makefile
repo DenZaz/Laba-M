@@ -2,6 +2,20 @@ CFLAGS =-Wall -Werror -c
 TFLAGS =-I thirdparty -I src
 .PHONY: clean
 
+%.o: %.c ctest.h
+	$(CC) $(CCFLAGS) -c -o $@ $<
+
+test: deposit-calc-test
+	mkdir buldtest -p
+deposit-calc-test: buldtest/deposit_test.o buldtest/maint.o build/deposit.o buldtest/validation_test.o
+	gcc buldtest/deposit_test.o buldtest/maint.o build/deposit.o buldtest/validation_test.o -o bin/deposit-test
+
+buldtest/deposit_test.o: test/deposit_test.c
+	gcc $(TFLAGS) $(CFLAGS) test/deposit_test.c -o buldtest/deposit_test.o
+buldtest/maint.o: test/maint.c
+	gcc $(TFLAGS) $(CFLAGS) test/maint.c -o buldtest/maint.o
+buldtest/validation_test.o: test/validation_test.c
+	gcc $(TFLAGS) $(CFLAGS) test/validation_test.c -o buldtest/validation_test.o
 
 
 all: bin/deposit-calc
