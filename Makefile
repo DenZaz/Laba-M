@@ -1,44 +1,40 @@
-CFLAGS =-Wall -Werror -c
-TFLAGS =-I thirdparty -I src
-.PHONY:all test clean
+CC = gcc
+CFLAGS = -Wall -Werror
+TEST_FLAGS = -I src -I thirdparty -Wall -Werror
 
-%.o: %.c ctest.h
-	$(CC) $(CCFLAGS) -c -o $@ $<
+EXECUTABLE = bin/prog
+TEST_EXEC = bin/test
 
-
-all: bin/deposit-calc
-
-build/main.d: src/main.c
-	mkdir build -p
-	gcc -Wall -Werror -c -o build/main.o src/main.c -MP -MMD
-build/deposit.d: src/deposit.c
-	mkdir build -p
-	gcc -Wall -Werror -c -o build/deposit.o src/deposit.c -MP -MMD
-bin/deposit-calc: build/main.o build/deposit.o
-	mkdir bin -p
-	gcc -Wall -Werror -o bin/deposit-calc build/deposit.o build/main.o 
-
-test: deposit-calc-test
-	mkdir buldtest -p
-deposit-calc-test: buldtest/deposit_test.o buldtest/maint.o build/deposit.o buldtest/validation_test.o
-	gcc buldtest/deposit_test.o buldtest/maint.o build/deposit.o buldtest/validation_test.o -o bin/deposit-test
-
-buldtest/deposit_test.o: test/deposit_test.c
-	mkdir buldtest -p
-	gcc $(TFLAGS) $(CFLAGS) test/deposit_test.c -o buldtest/deposit_test.o
-buldtest/maint.o: test/maint.c
-	mkdir buldtest -p
-	gcc $(TFLAGS) $(CFLAGS) test/maint.c -o buldtest/maint.o
-buldtest/validation_test.o: test/validation_test.c
-	mkdir buldtest -p
-	gcc $(TFLAGS) $(CFLAGS) test/validation_test.c -o buldtest/validation_test.o
+TEST_OBJ_DIR = build/test
+SRC_BUILD_DIR = build/src
 
 
-clean: 		
-	rm build/*.o
-	rm build/*.d
-	rm buldtest/*.o
--include build/main.d
--include build/deposit.d
+all: $(SRC_BUILD_DIR)/main.o $(SRC_BUILD_DIR)/deposit.o
+	$(CC) $(SRC_BUILD_DIR)/main.o $(SRC_BUILD_DIR)/deposit.o -o $(EXECUTABLE)
+
+$(SRC_BUILD_DIR)/main.o: src/main.c
+	$(CC) $(CFLAGS) -c src/main.c -o $(SRC_BUILD_DIR)/main.o
+
+$(SRC_BUILD_DIR)/deposit.o: src/deposit.c
+	$(CC) $(CFLAGS) -c src/deposit.c -o $(SRC_BUILD_DIR)/deposit.o
+
+all: deposit-calc-test
+
+deposit-calc-test: $(TEST_OBJ_DIR)/main.o $(TEST_OBJ_DIR)/deposit_test.o $(TEST_OBJ_DIR)/validation_test.o $(SRC_BUILD_DIR)/deposit.o
+	$(CC) $(TEST_OBJ_DIR)/main.o $(TEST_OBJ_DIR)/deposit_test.o $(TEST_OBJ_DIR)/validation_test.o $(SRC_BUILD_DIR)/deposit.o -o $(TEST_EXEC)
+
+$(TEST_OBJ_DIR)/main.o: test/main.c
+	$(CC) $(TEST_FLAGS) -c test/main.c -o $(TEST_OBJ_DIR)/main.o
+
+$(TEST_OBJ_DIR)/deposit_test.o: test/deposit_test.c
+	$(CC) $(TEST_FLAGS) -c test/deposit_test.c -o $(TEST_OBJ_DIR)/deposit_test.o
+
+$(TEST_OBJ_DIR)/validation_test.o: test/validation_test.c
+	$(CC) $(TEST_FLAGS) -c test/validation_test.c -o $(TEST_OBJ_DIR)/validation_test.o
 
 
+.c.o:
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:
+	rm -rf *.o *.exe
