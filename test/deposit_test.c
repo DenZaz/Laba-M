@@ -1,61 +1,52 @@
-#include <unistd.h>
-#include <stdlib.h>
+#include "deposit.h"
 #include "ctest.h"
 
-// basic test without setup/teardown
-CTEST(Skorost, testaVichisleni) {//отвечает за сеорость проверки
-    usleep(2000);//скорость
+CTEST(PenaltyTest, penaltyAppliedTenPercentOK)
+{
+    const int result = perform(20, 1000);
+    const int expected = 900;
+    ASSERT_EQUAL(expected, result);
 }
 
-// there are many different ASSERT macro's (see ctest.h)
-CTEST(TestForDeposit10000, Dni30min10pr) {//проверка для вычисления
-    
-    const int sum = 10000;
-    const int den=sum-sum/100*10;                       
-
-    ASSERT_EQUAL(9000, den);//сравнеие ожидание/реальность
+CTEST(LessBlockTests, goodDataPass102)
+{
+    const int result = perform(60, 1000);
+    const int expected = 1020;
+    ASSERT_EQUAL(expected, result);
 }
 
-CTEST(TestForDeposit10000, Dni120s2pr) {
-    const int sum = 10000;
-    const int den = sum + sum / 100 * 2;                          
-    ASSERT_EQUAL(10200, den);
+CTEST(LessBlockTests, goodDataPass106)
+{
+    const int result = perform(200, 1000);
+    const int expected = 1060;
+    ASSERT_EQUAL(expected, result);
 }
 
-CTEST(TestForDeposit10000, Dni240s6pr) {
-    const int sum = 10000;
-    const int den = sum + sum / 100 * 6;                           
-    ASSERT_EQUAL(10600, den);
+CTEST(LessBlockTests, goodDataPass112)
+{
+    const int result = perform(300, 1000);
+    const int expected = 1120;
+    ASSERT_EQUAL(expected, result);
 }
 
-CTEST(TestForDeposit10000, Dni365s12pr) {
-    const int sum = 10000;
-    const int den = sum + sum / 100 * 12;                              
-    ASSERT_EQUAL(11200, den);
+CTEST(MoreBlockTests, goodDataPass103)
+{
+    const int result = perform(100, 200000);
+    const int expected = 206000;
+    ASSERT_EQUAL(expected, result);
 }
 
-CTEST(TestForDeposit100000, Dni30min10pr) {
-    const int sum = 100000;
-    const int den = sum - sum / 100 * 10;                              
-    ASSERT_EQUAL(90000, den);
+CTEST(MoreBlockTests, goodDataPass108)
+{
+    const int result = perform(200, 200000);
+    const int expected = 216000;
+    ASSERT_EQUAL(expected, result);
 }
 
-CTEST(TestForDeposit100000, Dni120s3pr) {
-    const int sum = 100000;
-    const int den = sum + sum / 100 * 3;                             
-    ASSERT_EQUAL(103000, den);
+CTEST(MoreBlockTests, goodDataPass115)
+{
+    const int result = perform(300, 200000);
+    const int expected = 229999;
+    ASSERT_EQUAL(expected, result);
 }
-
-CTEST(TestForDeposit100000, Dni240s8pr) {
-    const int sum = 100000;
-    const int den = sum + sum / 100 * 8;                              
-    ASSERT_EQUAL(108000, den);
-}
-
-
-CTEST(TestForDeposit100000, Dni365s15pr) {
-    const int sum = 100000;
-    const int den = sum + sum / 100 * 15;                              
-    ASSERT_EQUAL(115000, den);
-} 
   

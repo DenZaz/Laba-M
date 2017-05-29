@@ -1,66 +1,37 @@
-#include <unistd.h>
-#include <stdlib.h>
+#include "deposit.h"
 #include "ctest.h"
 
-// basic test without setup/teardown
-CTEST(Skorost, testaValidation) {//скорость
-    usleep(2000);
+CTEST(InputValidation, BordersCheckPassedLeft)
+{
+    const int result = inputCheck(0, 0);
+    const int expected = 1;
+    ASSERT_EQUAL(expected, result);
 }
 
-CTEST(ProverkaVvodaMenshe10000, CorrectDannieVklada) {//проверка входных данных
-    const int sum = 9000;
-    int p=0;  
-     
-   if (sum<10000)
-{  
-	  p=1;
-	
-    }
-                           
-    ASSERT_EQUAL(1, p);// срав ожид/реал
-} 
-
-
-
-CTEST(ProverkaVvodaBolshe100000, CorrectDannieVklada) {
-    const int sum = 110000;
-    int p=0;  
-     
-   if (sum > 100000)
-    {
-      p=1;
-    }  
-                           
-    ASSERT_EQUAL(1, p);
-} 
-
-
-
-
-CTEST(KolichestvoDneiBolsheGoda, CorrectDannieDnei) {
-    const int sr= 380;
-    int p=0;  
-     
-  if (sr > 365)
+CTEST(InputValidation, BordersCheckPassedRight)
 {
-    
-    p = 1;
-    } 
-                           
-    ASSERT_EQUAL(1, p);
-} 
+    const int result = inputCheck(365, 0);
+    const int expected = 1;
+    ASSERT_EQUAL(expected, result);
+}
 
-
-
-CTEST(KolichestvoDneiOtricatelnoe, CorrectDannieDnei) {
-    const int sr= -100;
-    int p=0;  
-     
- if (sr < 0)
+CTEST(InputValidation, durationLessZeroFail)
 {
-    p = 1;
-    }
-                           
-    ASSERT_EQUAL(1, p);
-} 
+    const int result = inputCheck(-5, 0);
+    const int expected = 1;
+    ASSERT_EQUAL(expected, result);
+}
 
+CTEST(InputValidation, amountLessZeroFail)
+{
+    const int result = inputCheck(5, -100);
+    const int expected = 1;
+    ASSERT_EQUAL(expected, result);
+}
+
+CTEST(InputValidation, durationAndAmountRangeTestPass)
+{
+    const int result = inputCheck(30, 1000);
+    const int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
