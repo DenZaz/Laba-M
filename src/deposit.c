@@ -1,63 +1,42 @@
 #include <stdio.h>
-#include <math.h>
 #include "deposit.h"
-//pr
-int proverka (int sum, int sr)
-{
-    int ch;
-    int den;
-  
-if (sum<10000)
-{
-     ch = 1;  
+
+int inputCheck(int dur, int amount) {
+    if (dur <= 0 || dur > 365 || amount <= 0) return 1;
+    return 0;
+}
+
+int perform(int dur, int amount) {
+    if (dur >= 0 && dur <= 30) {
+        amount *= 0.9;
     }
-if (sr > 365)
-{
     
-    ch = 1;
+    if (amount < 100000) {
+        if (dur >= 31 && dur <= 120) {
+            amount *= 1.02;
+        }
+
+        if (dur >= 121 && dur <= 240) {
+            amount *= 1.06;
+        }
+        
+        if (dur >= 241 && dur <= 365) {
+            amount *= 1.12;
+        }
     }
-if (sr < 0)
-{
-    ch = 1;
+    
+    if (amount > 100000) {
+        if (dur >= 31 && dur <= 120) {
+            amount *= 1.03;
+        }
+
+        if (dur >= 121 && dur <= 240) {
+            amount *= 1.08;
+        }
+        
+        if (dur >= 241 && dur <= 365) {
+            amount *= 1.15;
+        }
     }
-if (sum < 100000)
-{
-if (sr < 31 && 0 <= sr)
-{  
-    den = sum - sum / 100 * 10;                      
-    }  
-if (sr < 121 && 31 <= sr)
-{  
-    den = sum + sum / 100 * 2;                   
-    }  
-if (sr < 241 && 121 <= sr)
-{  
-    den = sum + sum / 100 * 6;                   
-    }   
-if (sr < 366 && 241 <= sr)
-{  
-    den = sum + sum / 100 * 12;                     
-    }                    
-    }
-if (sum > 100000)
-{
-if (sr < 31 && 0 <= sr)
-{  
-    den = sum - sum / 100 * 10;         
-    }  
-if (sr < 121 && 31 <= sr)
-{  
-    den = sum + sum / 100 * 3;                   
-    }  
-if (sr < 241 && 121 <= sr)
-{  
-    den = sum + sum / 100 * 8;                    
-    }   
-if (sr < 366 && 241 <= sr)
-{  
-    den = sum + sum / 100 * 15;              
-    } 
-    }
- return den;
- return ch;
+    return amount;
 }
