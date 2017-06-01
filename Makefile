@@ -2,6 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Werror
 TEST_FLAGS = -I src -I thirdparty -Wall -Werror
 
+
 EXECUTABLE = bin/prog
 TEST_EXEC = bin/test
 
@@ -32,9 +33,6 @@ $(TEST_OBJ_DIR)/deposit_test.o: test/deposit_test.c
 $(TEST_OBJ_DIR)/validation_test.o: test/validation_test.c
 	$(CC) $(TEST_FLAGS) -c test/validation_test.c -o $(TEST_OBJ_DIR)/validation_test.o
 
-
-.c.o:
-	$(CC) $(CFLAGS) $< -o $@
-
+.PHONY: clean
 clean:
 	rm -rf *.o *.exe
