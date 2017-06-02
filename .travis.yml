@@ -1,4 +1,5 @@
 language: c
-
-script: make
-./bin/deposite-test
+compiler: gcc
+script: 
+  - make
+  - ./bin/deposit-test
