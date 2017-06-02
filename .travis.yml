@@ -1,6 +1,14 @@
 language: c
+compiler: gсс
 
- compiler: g++
- 
- 
- script: make test && bin/deposit-calc-test
+before_install:
+
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+
+install: 
+  
+  - sudo apt-get install -qq gсс-5
+  - sudo update-alternatives --install /usr/bin/gсс gсс /usr/bin/gсс-5 90
+
+script: make test && bin/deposit-calc-test
