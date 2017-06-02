@@ -2,4 +2,4 @@ language: c
 compiler: gcc
 script: 
   - make
-  - ./bin/deposit-test
+  - ./bin/deposit_test
